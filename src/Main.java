@@ -33,7 +33,7 @@ public class Main {
 
                 case 1:
                     System.out.println("\n--- Nova Reserva ---");
-                    sc.nextLine(); // limpa o buffer do scanner
+                    sc.nextLine(); // limpa o buffer do scanner após nextInt()
 
                     System.out.print("Digite o nome do hóspede: ");
                     String nomeDoHospede = sc.nextLine();
@@ -63,15 +63,19 @@ public class Main {
                         }
                     }
                     break;
+
                 case 3:
                     System.out.println("\n--- Buscar Reserva por Nome ---");
+                    sc.nextLine(); // <<< importante: limpa o newline deixado por nextInt() do menu
                     System.out.print("Digite o nome do hóspede: ");
-                    String nomeBusca = sc.nextLine();
+                    String nomeBusca = sc.nextLine().trim();
 
                     boolean encontrado = false;
+                    String nomeBuscaLower = nomeBusca.toLowerCase();
 
                     for (Reserva r : listaReservas) {
-                        if (r.getNomeDoHospede().equalsIgnoreCase(nomeBusca)) {
+                        // busca por substring, sem diferenciar maiúsc/minúsc
+                        if (r.getNomeDoHospede().toLowerCase().contains(nomeBuscaLower)) {
                             System.out.println("Reserva encontrada:");
                             System.out.println(r);
                             encontrado = true;
@@ -82,11 +86,21 @@ public class Main {
                         System.out.println("❌ Nenhuma reserva encontrada para o hóspede \"" + nomeBusca + "\"");
                     }
                     break;
-                default:
-                    System.out.println("⚠️ Opção inválida, tente novamente.");
+                case 4:
+                    // Ordena Reservas por ordem decrescente
+                    System.out.println("\n--- Reservas ordenadas por número de dias (decrescente) ---");
+                    if(listaReservas.isEmpty()){
+                        System.out.println("Nenhuma reserva cadastrada.");
+                    } else {
+                        listaReservas.sort((r1, r2) -> Integer.compare(r2.getNumeroDias(), r1.getNumeroDias()));
+                        for (Reserva r : listaReservas) {
+                            System.out.println(r);
+                        }
+                    }
             }
         }
 
         sc.close();
     }
+
 }
